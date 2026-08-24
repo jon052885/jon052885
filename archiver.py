@@ -10,19 +10,32 @@ import hashlib
 import os
 import datetime
 import sys
+import base64
+
+# --- OBFUSCATION & PROTECTION ---
+def _decode_key(encoded):
+    return base64.b64decode(encoded).decode()
+
+OWNER_KEY = _decode_key("U1VQREVNRS1PV05FUi1LRVk=")  # SUPREME-OWNER-KEY
+PERSONAL_KEY = _decode_key("U1VQREVNRS0xMjMtS0VZ")    # SUPREME-123-KEY
+TEAM_KEY = _decode_key("U1VQREVNRS00NTYtS0VZ")        # SUPREME-456-KEY
+ENTERPRISE_KEY = _decode_key("U1VQREVNRS03ODktS0VZ")   # SUPREME-789-KEY
 
 # --- CONFIG ---
-# Only YOU control these license keys. Distribute them only to paying users.
 VALID_LICENSE_KEYS = {
-    "SUPREME-OWNER-KEY": "Owner",        # Reserved for you
-    "SUPREME-123-KEY": "Personal",
-    "SUPREME-456-KEY": "Team",
-    "SUPREME-789-KEY": "Enterprise"
+    OWNER_KEY: "Owner",
+    PERSONAL_KEY: "Personal",
+    TEAM_KEY: "Team",
+    ENTERPRISE_KEY: "Enterprise"
 }
 
 # --- LICENSE CHECK ---
 def check_license():
     license_key = os.getenv("ARCHIVER_LICENSE")
+    if not license_key:
+        print("❌ No license key provided. Set ARCHIVER_LICENSE environment variable.")
+        return False
+    
     if license_key in VALID_LICENSE_KEYS:
         tier = VALID_LICENSE_KEYS[license_key]
         if tier == "Owner":
@@ -31,7 +44,7 @@ def check_license():
             print(f"✅ Licensed user ({tier} tier)")
         return True
     else:
-        print("❌ No valid license key found. Only the owner can authorize usage.")
+        print("❌ Invalid license key. Only authorized users can access this tool.")
         return False
 
 # --- ARCHIVER FUNCTION ---
