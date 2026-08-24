@@ -1,5 +1,5 @@
 # ============================================================
-# Supreme Robot Archiver
+# Supreme Robot Archiver (Premium Only)
 # Copyright (c) 2026 Salvador Jon-Jon Manongdo II
 # All rights reserved. Unauthorized copying prohibited.
 # ============================================================
@@ -12,9 +12,9 @@ import datetime
 import sys
 
 # --- CONFIG ---
-TRIAL_DAYS = 30
-INSTALL_DATE = datetime.date(2026, 8, 24)  # set when first installed
+# Only YOU control these license keys. Distribute them only to paying users.
 VALID_LICENSE_KEYS = {
+    "SUPREME-OWNER-KEY": "Owner",        # Reserved for you
     "SUPREME-123-KEY": "Personal",
     "SUPREME-456-KEY": "Team",
     "SUPREME-789-KEY": "Enterprise"
@@ -22,19 +22,16 @@ VALID_LICENSE_KEYS = {
 
 # --- LICENSE CHECK ---
 def check_license():
-    today = datetime.date.today()
-    days_used = (today - INSTALL_DATE).days
-
-    if days_used <= TRIAL_DAYS:
-        print(f"✅ Trial active: {TRIAL_DAYS - days_used} days left")
-        return True
-
     license_key = os.getenv("ARCHIVER_LICENSE")
     if license_key in VALID_LICENSE_KEYS:
-        print(f"✅ Licensed user ({VALID_LICENSE_KEYS[license_key]} tier)")
+        tier = VALID_LICENSE_KEYS[license_key]
+        if tier == "Owner":
+            print("✅ Full control: Owner access granted")
+        else:
+            print(f"✅ Licensed user ({tier} tier)")
         return True
     else:
-        print("❌ Trial expired. Please purchase a license to continue.")
+        print("❌ No valid license key found. Only the owner can authorize usage.")
         return False
 
 # --- ARCHIVER FUNCTION ---
